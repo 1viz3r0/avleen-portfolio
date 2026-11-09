@@ -5,6 +5,20 @@ import { InteractiveHoverButton } from '@/components/ui/interactive-hover-button
 import { Reveal } from '@/components/Reveal'
 import { hero, identity, links } from '@/data/content'
 
+/*
+ * Portrait slot: resolves `src/assets/avleen-portrait.*` only when the file
+ * actually exists (eager glob). Until the original portrait is added the
+ * slot renders nothing — no broken import, no substitute image ever.
+ * Adding the file (png/jpg/webp) activates the approved circular layout
+ * automatically; no code change needed.
+ */
+const portraitCandidates = import.meta.glob<string>('/src/assets/avleen-portrait.*', {
+  eager: true,
+  query: '?url',
+  import: 'default',
+})
+const portraitSrc = Object.values(portraitCandidates)[0]
+
 /**
  * Hero. Full-bleed background: the original Ink Ridges component via the
  * integration adapter — nothing is substituted while it is unavailable.
@@ -34,24 +48,43 @@ export function Hero() {
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-72 bg-gradient-to-t from-background via-background/70 to-transparent" />
 
       <div className="mx-auto w-full max-w-7xl px-5 pb-28 pt-24 sm:px-8 sm:pb-32">
-        <Reveal className="flex flex-col gap-8">
-          <p className="eyebrow flex flex-wrap items-center gap-x-3 gap-y-2 text-muted">
-            <span className="text-accent">{identity.location}</span>
-            <span aria-hidden="true" className="text-line-strong">·</span>
-            <span>Cybersecurity Specialist | Security Researcher</span>
-          </p>
+        <Reveal className="flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-16 will-change-transform">
+          {/* Portrait — circular, thin vermilion border. On mobile it stacks
+              above the text; on lg+ it sits on the right at ~300px.
+              Renders only once src/assets/avleen-portrait.* exists. */}
+          {portraitSrc ? (
+            <div className="order-first shrink-0 self-start lg:order-last lg:self-auto">
+              <img
+                src={portraitSrc}
+                alt="Portrait of Avleen Singh"
+                width={300}
+                height={300}
+                loading="eager"
+                draggable="false"
+                className="size-44 rounded-full border-2 border-accent object-cover select-none sm:size-56 lg:size-[300px]"
+              />
+            </div>
+          ) : null}
 
-          <h1 className="font-display text-[clamp(3.5rem,14vw,9rem)] leading-[0.9] tracking-[-0.02em] text-foreground">
-            {heroTitleLines.map((line, i) => (
-              <span key={line} className="block" style={i === 1 ? { marginLeft: '0.35em' } : undefined}>
-                {line}
-              </span>
-            ))}
-          </h1>
+          <div className="flex flex-col gap-8">
+            <p className="eyebrow flex flex-wrap items-center gap-x-3 gap-y-2 text-muted">
+              <span className="text-accent">{identity.location}</span>
+              <span aria-hidden="true" className="text-line-strong">·</span>
+              <span>Cybersecurity Specialist | Security Researcher</span>
+            </p>
 
-          <p className="max-w-2xl font-display text-xl italic leading-snug text-foreground/90 sm:text-2xl">
-            {hero.tagline}
-          </p>
+            <h1 className="font-display text-[clamp(3.5rem,14vw,9rem)] leading-[0.9] tracking-[-0.02em] text-foreground">
+              {heroTitleLines.map((line, i) => (
+                <span key={line} className="block" style={i === 1 ? { marginLeft: '0.35em' } : undefined}>
+                  {line}
+                </span>
+              ))}
+            </h1>
+
+            <p className="max-w-2xl font-display text-xl italic leading-snug text-foreground/90 sm:text-2xl">
+              {hero.tagline}
+            </p>
+          </div>
         </Reveal>
 
         <div className="mt-12 grid gap-10 md:grid-cols-12">

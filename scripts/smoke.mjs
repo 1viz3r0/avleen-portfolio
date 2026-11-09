@@ -76,6 +76,13 @@ async function main() {
       }
       const buttons = await p.evaluate(() => document.querySelectorAll('button').length)
       assert.ok(buttons >= 3, `expected the two CTA buttons + toggles, got ${buttons}`)
+      const portraitState = await p.evaluate(() => {
+        const img = document.querySelector('img[alt="Portrait of Avleen Singh"]')
+        if (!img) return 'absent — original portrait file not added yet'
+        return img.complete && img.naturalWidth > 0 ? 'loaded' : 'broken'
+      })
+      // Legit states: loaded (file present) or absent (file not added yet).
+      assert.ok(portraitState !== 'broken', `portrait image state: ${portraitState}`)
       await p.close()
     }),
 
