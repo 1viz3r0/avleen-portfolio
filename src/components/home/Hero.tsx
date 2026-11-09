@@ -1,4 +1,3 @@
-import { ArrowDown } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 import { InkRidgesSlot } from '@/components/ui/ink-ridges/adapter'
@@ -11,6 +10,14 @@ import { hero, identity, links } from '@/data/content'
  * integration adapter — nothing is substituted while it is unavailable.
  * The scrim gradients below keep type readable over the WebGL canvas and
  * guarantee legibility on plain background or light mode too.
+ *
+ * Composition notes:
+ *  - The display name scales fluidly (clamp) instead of snapping between
+ *    breakpoint font sizes — no discontinuity when crossing sm/md/lg.
+ *  - Bottom padding reserves room for the scroll cue and the availability
+ *    line on short viewports.
+ *  - The scroll cue is deliberately static (mono label + hairline): motion
+ *    here competed with the content and added nothing.
  */
 export function Hero() {
   const navigate = useNavigate()
@@ -26,15 +33,15 @@ export function Hero() {
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-36 bg-gradient-to-b from-background/80 to-transparent" />
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-72 bg-gradient-to-t from-background via-background/70 to-transparent" />
 
-      <div className="mx-auto w-full max-w-6xl px-5 pb-20 pt-40 sm:px-8 sm:pb-24 sm:pt-48">
-        <Reveal className="flex flex-col gap-7">
+      <div className="mx-auto w-full max-w-7xl px-5 pb-28 pt-24 sm:px-8 sm:pb-32">
+        <Reveal className="flex flex-col gap-8">
           <p className="eyebrow flex flex-wrap items-center gap-x-3 gap-y-2 text-muted">
             <span className="text-accent">{identity.location}</span>
             <span aria-hidden="true" className="text-line-strong">·</span>
             <span>Cybersecurity Specialist | Security Researcher</span>
           </p>
 
-          <h1 className="font-display text-[17vw] leading-[0.86] tracking-[-0.02em] text-foreground sm:text-7xl md:text-8xl lg:text-9xl">
+          <h1 className="font-display text-[clamp(3.5rem,14vw,9rem)] leading-[0.9] tracking-[-0.02em] text-foreground">
             {heroTitleLines.map((line, i) => (
               <span key={line} className="block" style={i === 1 ? { marginLeft: '0.35em' } : undefined}>
                 {line}
@@ -42,13 +49,15 @@ export function Hero() {
             ))}
           </h1>
 
-          <p className="max-w-xl font-display text-xl italic leading-snug text-foreground/90 sm:text-2xl">
+          <p className="max-w-2xl font-display text-xl italic leading-snug text-foreground/90 sm:text-2xl">
             {hero.tagline}
           </p>
         </Reveal>
 
-        <div className="mt-10 grid gap-10 md:grid-cols-12">
-          <div className="md:col-span-6 md:col-start-1 lg:col-span-7 lg:col-start-2">
+        <div className="mt-12 grid gap-10 md:grid-cols-12">
+          {/* One continuous indent: starts one column in from md upward, and
+              only the span widens at lg — the column never jumps. */}
+          <div className="md:col-span-6 md:col-start-2 lg:col-span-7">
             <Reveal delay={120} className="flex max-w-xl flex-col gap-4 text-[0.95rem] leading-relaxed text-muted">
               {hero.paragraphs.map((p) => (
                 <p key={p.slice(0, 24)}>{p}</p>
@@ -77,8 +86,10 @@ export function Hero() {
         </div>
       </div>
 
-      <div aria-hidden="true" className="pointer-events-none absolute bottom-6 left-1/2 hidden -translate-x-1/2 md:block">
-        <ArrowDown className="size-4 animate-bounce text-faint" />
+      {/* Restrained scroll cue: mono label + hairline, CSS only, no motion */}
+      <div aria-hidden="true" className="pointer-events-none absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-3 md:flex">
+        <span className="font-mono text-[0.6rem] uppercase tracking-[0.3em] text-faint">Scroll</span>
+        <span className="h-10 w-px bg-gradient-to-b from-line-strong to-transparent" />
       </div>
     </section>
   )
