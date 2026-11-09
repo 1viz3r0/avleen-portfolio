@@ -1,0 +1,155 @@
+@import 'tailwindcss';
+
+/* Ink & Signal — dark-first editorial design system */
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  /* Light — warm paper */
+  --background: #f4f0e9;
+  --surface: #fbf8f2;
+  --foreground: #191510;
+  --muted: #6f685c;
+  --faint: #968e80;
+  --line: color-mix(in oklab, #191510 16%, transparent);
+  --line-strong: color-mix(in oklab, #191510 28%, transparent);
+  --accent: #b5402a;
+  --accent-ink: #f4f0e9;
+  --primary: #191510;
+  --primary-foreground: #191510;
+  --grain-opacity: 0.05;
+}
+
+.dark {
+  /* Dark — near-black and charcoal (default) */
+  --background: #0b0a09;
+  --surface: #161311;
+  --foreground: #ece7e0;
+  --muted: #9a9288;
+  --faint: #6e675f;
+  --line: color-mix(in oklab, #ece7e0 13%, transparent);
+  --line-strong: color-mix(in oklab, #ece7e0 22%, transparent);
+  /* The restrained vermilion, tuned for dark contrast */
+  --accent: #d05a41;
+  --accent-ink: #0b0a09;
+  --primary: #ece7e0;
+  --primary-foreground: #ece7e0;
+  --grain-opacity: 0.035;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --font-display: 'Fraunces Variable', Georgia, 'Times New Roman', serif;
+  --font-sans: 'IBM Plex Sans Variable', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
+
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem;
+}
+
+body {
+  @apply bg-background text-foreground font-sans antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Fine grain texture over everything */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 140px 140px;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Reveal-on-scroll primitives (opt-in via .reveal) */
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.7s var(--ease-out-expo),
+    transform 0.7s var(--ease-out-expo);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Page transitions */
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.page-enter {
+  animation: page-in 0.32s var(--ease-out-expo) both;
+}
+
+/* Editorial helpers */
+.eyebrow {
+  @apply font-mono text-[0.6875rem] uppercase tracking-[0.22em];
+}
+
+.hairline {
+  @apply border-line;
+}
+
+/* Underline that reveals on hover for inline links */
+.ink-link {
+  @apply text-foreground underline decoration-line decoration-1 underline-offset-4 transition-colors hover:decoration-accent hover:text-accent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
