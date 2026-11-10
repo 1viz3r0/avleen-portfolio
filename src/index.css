@@ -57,6 +57,10 @@
 }
 
 html {
+  /* Typography scale: a 9.4% root lift raises the whole rem-based ramp
+     (labels, nav, buttons, body, headings) while preserving the Ink &
+     Signal rhythm — spacing scales along, so the layout holds. */
+  font-size: 17.5px;
   scroll-behavior: smooth;
   scroll-padding-top: 5.5rem;
 }

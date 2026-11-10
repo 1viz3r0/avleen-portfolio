@@ -25,10 +25,12 @@ function AnimatedRoutes() {
   )
 }
 
+// BASE_URL is '/' locally and '/avleen-portfolio/' on the GitHub Pages
+// build (vite --base), so the same router serves both unchanged.
 export default function App() {
   return (
     <ThemeProvider>
-      <BrowserRouter>
+      <BrowserRouter basename={import.meta.env.BASE_URL}>
         <Header />
         <AnimatedRoutes />
         <Footer />

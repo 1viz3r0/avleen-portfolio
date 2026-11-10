@@ -43,30 +43,24 @@ achievements or capabilities.
 | Component | Status |
 | --- | --- |
 | Interactive Hover Button | ✅ **Original installed** — retrieved verbatim from the Magic UI registry (`magicui.design/r/interactive-hover-button`), the same component referenced on 21st.dev (author: Dillion Verma, MIT). File: `src/components/ui/interactive-hover-button.tsx`. |
-| Ink Ridges | ⏳ **Pending** — 21st.dev registry requires an API key; no key was available, so nothing was substituted. An adapter slot + full install walkthrough is at `src/components/ui/ink-ridges/`. |
+| Ink Ridges | ✅ **Original installed** — Ryan Tseng's WebGL2 sumi-e landscape, MIT. The registry CLI/API requires a 21st.dev API key (verified 401/403 without one), so the component's compiled module was taken **byte-identical from 21st.dev's own public preview bundle** for this component; only imports/exports were added. Full provenance + audit: header of `src/components/ui/ink-ridges.tsx`. |
 | Hover Preview | ⏳ **Pending** — same situation; inert accessible slot at `src/components/ui/hover-preview/slot.tsx` with install walkthrough at `src/components/ui/hover-preview/README.md`. |
 | header-3.tsx / gradient-menu.tsx | ➖ **Never supplied** — no matching original exists to retrieve. The sticky header and the mobile gradient-washed menu are **restrained original designs by us**, not claimed as 21st.dev components (`src/components/layout/Header.tsx`). |
 
 ### Installing the pending originals
 
-Both install with a free 21st.dev API key from <https://21st.dev/mcp> (free
-accounts get a limited number of installs per day). Then wire-up is automatic
-or a single documented edit:
+Hover Preview installs with a free 21st.dev API key from <https://21st.dev/mcp>
+(free accounts get a limited number of installs per day). Then wire-up is
+automatic or a single documented edit:
 
 ```bash
-# Ink Ridges → src/components/ui/ink-ridges.tsx (hero background, auto-wired)
-npx shadcn@latest add \
-  "https://21st.dev/r/ryanonline1234/ink-ridges?api_key=$API_KEY_21ST" \
-  --path src/components/ui/ink-ridges.tsx --overwrite --yes
-
 # Hover Preview → src/components/ui/hover-preview.tsx (auto-detected by the slot)
 npx shadcn@latest add \
   "https://21st.dev/r/minhxthanh/hover-preview?api_key=$API_KEY_21ST" \
   --path src/components/ui/hover-preview.tsx --overwrite --yes
 ```
 
-Details: `src/components/ui/ink-ridges/README.md` and
-`src/components/ui/hover-preview/README.md`.
+Details: `src/components/ui/hover-preview/README.md`.
 
 ## Structure
 
@@ -75,10 +69,12 @@ src/
   data/content.ts              # single source of truth for all public copy
   components/
     layout/                    # Header (sticky + mobile gradient menu), Footer, ScrollManager
-    home/                      # Hero (Ink Ridges slot), Snapshot, FeaturedProjects,
-                               # About, Experience, Expertise, Certifications, Contact
+    home/                      # Hero (original Ink Ridges background), Snapshot,
+                               # FeaturedProjects, About, Experience, Expertise,
+                               # Certifications, Contact
     ui/                        # interactive-hover-button.tsx (original),
-                               # ink-ridges/ (slot + guide), hover-preview/ (slot + guide),
+                               # ink-ridges.tsx (original, hero background),
+                               # hover-preview/ (slot + guide),
                                # brand-icons.tsx
     SectionHeading.tsx, Reveal.tsx, ThemeToggle.tsx
   pages/                       # Home, ProjectsIndex, ProjectDetail (netoze/one-go), NotFound

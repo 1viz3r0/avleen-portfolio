@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 
-import { InkRidgesSlot } from '@/components/ui/ink-ridges/adapter'
+import InkRidges from '@/components/ui/ink-ridges'
 import { InteractiveHoverButton } from '@/components/ui/interactive-hover-button'
 import { Reveal } from '@/components/Reveal'
 import { hero, identity, links } from '@/data/content'
@@ -20,8 +20,8 @@ const portraitCandidates = import.meta.glob<string>('/src/assets/avleen-portrait
 const portraitSrc = Object.values(portraitCandidates)[0]
 
 /**
- * Hero. Full-bleed background: the original Ink Ridges component via the
- * integration adapter — nothing is substituted while it is unavailable.
+ * Hero. Full-bleed background: the original Ink Ridges component
+ * (21st.dev, MIT) mounted directly — see its header for provenance.
  * The scrim gradients below keep type readable over the WebGL canvas and
  * guarantee legibility on plain background or light mode too.
  *
@@ -38,14 +38,21 @@ export function Hero() {
 
   return (
     <section className="relative isolate flex min-h-[100svh] flex-col justify-end overflow-hidden">
-      {/* Original component slot — full-bleed, behind content */}
+      {/* Original Ink Ridges component — full-bleed, behind content.
+          bg-background anchors the paper/ink colour resolution locally. */}
       <div aria-hidden="true" className="absolute inset-0 -z-20">
-        <InkRidgesSlot className="!absolute inset-0 h-full w-full" />
+        <InkRidges
+          {...inkRidgesSettings}
+          label="An ink landscape of layered mountain ridges in mist, painted by code"
+          className="h-full w-full bg-background"
+        />
       </div>
 
-      {/* Readability scrims (top for header legibility, bottom to melt into page) */}
+      {/* Readability scrims: top for header legibility; a taller bottom veil
+          that carries the text zone (tagline, paragraphs, CTAs) while leaving
+          the sky — sun/moon — above it untouched; melts into the page. */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-36 bg-gradient-to-b from-background/80 to-transparent" />
-      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-72 bg-gradient-to-t from-background via-background/70 to-transparent" />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[62%] bg-gradient-to-t from-background via-background/80 to-transparent" />
 
       <div className="mx-auto w-full max-w-7xl px-5 pb-28 pt-24 sm:px-8 sm:pb-32">
         <Reveal className="flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-16 will-change-transform">
@@ -73,7 +80,7 @@ export function Hero() {
               <span>Cybersecurity Specialist | Security Researcher</span>
             </p>
 
-            <h1 className="font-display text-[clamp(3.5rem,14vw,9rem)] leading-[0.9] tracking-[-0.02em] text-foreground">
+            <h1 className="font-display text-[clamp(4rem,15vw,10.5rem)] leading-[0.9] tracking-[-0.02em] text-foreground">
               {heroTitleLines.map((line, i) => (
                 <span key={line} className="block" style={i === 1 ? { marginLeft: '0.35em' } : undefined}>
                   {line}
@@ -129,3 +136,27 @@ export function Hero() {
 }
 
 const heroTitleLines = ['Avleen', 'Singh']
+
+/*
+ * Official Ink Ridges demo configuration (21st.dev, @ryanonline1234).
+ * `moon` is left at its default ("auto"): dark background → moon,
+ * light background → vermilion sun. Theme flips repaint instantly via
+ * the component's own MutationObserver on <html>.
+ */
+const inkRidgesSettings = {
+  layers: 4,
+  seed: 7,
+  horizon: 0.62,
+  mist: 0.6,
+  drift: 0.05,
+  parallax: 0.03,
+  paintIn: 2600,
+  sun: true,
+  sunColor: '#b5402a',
+  scrollDepth: 0.35,
+  glow: 0.45,
+  clouds: 0.35,
+  birds: 5,
+  birdsEvery: 14,
+  grain: 0.3,
+} as const

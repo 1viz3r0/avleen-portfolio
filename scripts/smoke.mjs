@@ -16,7 +16,16 @@ async function main() {
   const browser = await puppeteer.launch({
     executablePath: '/usr/bin/chromium',
     headless: 'shell',
-    args: ['--no-sandbox', '--disable-gpu', '--hide-scrollbars', '--lang=en-GB'],
+    args: [
+      '--no-sandbox',
+      '--disable-gpu',
+      // Software-GL (SwiftShader) renders the hero's WebGL canvas on CPU;
+      // keep raster at 1× CSS pixels so headless runs stay fast. Layout is
+      // unaffected — only the canvas backing resolution changes.
+      '--force-device-scale-factor=1',
+      '--hide-scrollbars',
+      '--lang=en-GB',
+    ],
     defaultViewport: { width: 1440, height: 1000 },
   })
 
@@ -32,7 +41,9 @@ async function main() {
     })
     p.on('pageerror', (err) => consoleErrors.push('[pageerror] ' + err.message))
     p.on('requestfailed', (req) => failedRequests.push(req.url() + ' — ' + (req.failure()?.errorText ?? '')))
-    await p.goto(BASE, { waitUntil: 'networkidle0' })
+    // Generous navigation timeout: software-GL (SwiftShader) headless runs
+    // render the hero's WebGL canvas on CPU and can be slow to settle.
+    await p.goto(BASE, { waitUntil: 'load', timeout: 90000 })
     await p.evaluate(() => localStorage.clear())
     return p
   }
@@ -40,7 +51,7 @@ async function main() {
   const tests = [
     test('dark is default on first visit', async () => {
       const p = await wirePage(await newPage())
-      await p.reload({ waitUntil: 'networkidle0' }) // fresh visit, no storage
+      await p.reload({ waitUntil: 'load', timeout: 90000 }) // fresh visit, no storage
       const cls = await p.evaluate(() => document.documentElement.className)
       assert.equal(cls, 'dark', `expected class "dark", got "${cls}"`)
       await p.close()
@@ -52,7 +63,7 @@ async function main() {
       await p.waitForFunction(() => !document.documentElement.classList.contains('dark'))
       const stored = await p.evaluate(() => localStorage.getItem('avleen-theme'))
       assert.equal(stored, 'light')
-      await p.reload({ waitUntil: 'networkidle0' })
+      await p.reload({ waitUntil: 'load', timeout: 90000 })
       const cls = await p.evaluate(() => document.documentElement.className)
       assert.notEqual(cls, 'dark', `should stay light after reload, got "${cls}"`)
       await p.close()
@@ -105,7 +116,7 @@ async function main() {
 
     test('/projects and both case studies render with correct data', async () => {
       const p = await wirePage(await newPage())
-      await p.goto(`${BASE}/projects`, { waitUntil: 'networkidle0' })
+      await p.goto(`${BASE}/projects`, { waitUntil: 'load', timeout: 90000 })
       const idx = (await p.evaluate(() => document.body.innerText)).toLowerCase()
       for (const m of ['netoze', 'one-go', 'in development', 'in testing']) {
         assert.ok(idx.includes(m), `projects index missing "${m}"`)
@@ -115,7 +126,7 @@ async function main() {
         ['/projects/netoze', ['In Development', 'Back to projects', 'One-Go']],
         ['/projects/one-go', ['In Testing', 'Back to projects', 'NETOZE', 'URL validation']],
       ]) {
-        await p.goto(`${BASE}${path}`, { waitUntil: 'networkidle0' })
+        await p.goto(`${BASE}${path}`, { waitUntil: 'load', timeout: 90000 })
         const t = (await p.evaluate(() => document.body.innerText)).toLowerCase()
         for (const m of must) assert.ok(t.includes(m.toLowerCase()), `${path} missing "${m}"`)
         const logoLoaded = await p.evaluate(() => {
@@ -136,7 +147,7 @@ async function main() {
 
     test('unknown project slug → 404 content', async () => {
       const p = await wirePage(await newPage())
-      await p.goto(`${BASE}/projects/nope`, { waitUntil: 'networkidle0' })
+      await p.goto(`${BASE}/projects/nope`, { waitUntil: 'load', timeout: 90000 })
       const t = await p.evaluate(() => document.body.innerText)
       assert.ok(t.includes('Wrong room.'), '404 content missing')
       await p.close()
@@ -144,7 +155,7 @@ async function main() {
 
     test('unknown route → 404 page', async () => {
       const p = await wirePage(await newPage())
-      await p.goto(`${BASE}/definitely-missing`, { waitUntil: 'networkidle0' })
+      await p.goto(`${BASE}/definitely-missing`, { waitUntil: 'load', timeout: 90000 })
       const t = await p.evaluate(() => document.body.innerText)
       assert.ok(t.includes('404'), 'missing 404 marker on unknown route')
       await p.close()
@@ -169,16 +180,18 @@ async function main() {
       await p.evaluate(async () => {
         await new Promise((resolve) => {
           let y = 0
+          // Plausible scroll pace: IntersectionObserver evaluates between
+          // frames, so teleport-speed scrolls can skip elements entirely.
           const step = () => {
-            y += 500
+            y += 300
             window.scrollTo(0, y)
-            if (y < document.body.scrollHeight + 500) setTimeout(step, 90)
+            if (y < document.body.scrollHeight + 300) setTimeout(step, 140)
             else resolve()
           }
           step()
         })
       })
-      await sleep(900)
+      await sleep(1200)
       const counts = await p.evaluate(() => ({
         all: document.querySelectorAll('.reveal').length,
         visible: document.querySelectorAll('.reveal.is-visible').length,
@@ -229,6 +242,7 @@ async function main() {
   ]
 
   for (const t of tests) {
+    process.stdout.write(`RUN   ${t.name}\n`)
     try {
       await t.fn()
       results.push(`PASS  ${t.name}`)
@@ -237,24 +251,30 @@ async function main() {
     }
   }
 
-  // Screenshots for layout review (light + dark + routes + mobile)
+  console.log('\n=== RESULTS ===')
+  for (const r of results) console.log(r)
+  console.log('\nConsole errors/warnings captured:', consoleErrors.length ? consoleErrors : 'none')
+  console.log('Failed network requests:', failedRequests.length ? failedRequests : 'none')
+
+  // Screenshots for layout review (light + dark + routes + mobile). Runs after
+  // the results report so screenshot issues can never swallow test results.
   const shot = async (path, route, { theme, w, h, full } = {}) => {
     const p = await newPage()
     await wirePage(p)
     await p.setViewport({ width: w ?? 1440, height: h ?? 1000 })
     if (theme) {
       await p.evaluate((t) => localStorage.setItem('avleen-theme', t), theme)
-      await p.reload({ waitUntil: 'networkidle0' })
+      await p.reload({ waitUntil: 'load', timeout: 90000 })
     }
-    await p.goto(BASE + route, { waitUntil: 'networkidle0' })
+    await p.goto(BASE + route, { waitUntil: 'load', timeout: 90000 })
     await sleep(600)
     await p.evaluate(async () => {
       await new Promise((resolve) => {
         let y = 0
         const step = () => {
-          y += 700
+          y += 400
           window.scrollTo(0, y)
-          if (y < document.body.scrollHeight + 700) setTimeout(step, 70)
+          if (y < document.body.scrollHeight + 400) setTimeout(step, 110)
           else resolve()
         }
         step()
@@ -273,11 +293,6 @@ async function main() {
   await shot('/tmp/opencode/shot-mobile-dark.png', '/', { theme: 'dark', w: 390, h: 844 })
 
   await browser.close()
-
-  console.log('\n=== RESULTS ===')
-  for (const r of results) console.log(r)
-  console.log('\nConsole errors/warnings captured:', consoleErrors.length ? consoleErrors : 'none')
-  console.log('Failed network requests:', failedRequests.length ? failedRequests : 'none')
 }
 
 await main()

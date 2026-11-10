@@ -65,7 +65,9 @@ export function Header() {
     }
   }, [open])
 
-  /* Smooth-scroll same-page hash links instead of default jump. */
+  /* Smooth-scroll same-page hash links instead of default jump.
+     The replace target is base-aware: '/' locally, '/avleen-portfolio/'
+     on the GitHub Pages build. */
   const handleHashClick = useCallback(
     (href: string) => (e: React.MouseEvent) => {
       if (!href.startsWith('/#')) return
@@ -75,7 +77,8 @@ export function Header() {
       if (pathname === '/') {
         e.preventDefault()
         el.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })
-        history.replaceState(null, '', target)
+        const base = import.meta.env.BASE_URL
+        history.replaceState(null, '', base === '/' ? target : `${base.replace(/\/+$/, '')}${href}`)
       }
       setOpen(false)
     },
