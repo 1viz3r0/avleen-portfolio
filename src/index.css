@@ -8,8 +8,8 @@
   --background: #f4f0e9;
   --surface: #fbf8f2;
   --foreground: #191510;
-  --muted: #6f685c;
-  --faint: #968e80;
+  --muted: #625b4f;
+  --faint: #8a8172;
   --line: color-mix(in oklab, #191510 16%, transparent);
   --line-strong: color-mix(in oklab, #191510 28%, transparent);
   --accent: #b5402a;
@@ -57,10 +57,11 @@
 }
 
 html {
-  /* Typography scale: a 9.4% root lift raises the whole rem-based ramp
+  /* Typography scale: the root lift raises the whole rem-based ramp
      (labels, nav, buttons, body, headings) while preserving the Ink &
-     Signal rhythm — spacing scales along, so the layout holds. */
-  font-size: 17.5px;
+     Signal rhythm — spacing scales along, so the layout holds. Body copy
+     reads ≈18px on desktop and scales down fluidly on smaller screens. */
+  font-size: clamp(17px, 16px + 0.14vw, 18px);
   scroll-behavior: smooth;
   scroll-padding-top: 5.5rem;
 }

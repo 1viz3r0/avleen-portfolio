@@ -177,7 +177,7 @@ export function Contact() {
                 <div className="flex flex-wrap items-center gap-6">
                   <InteractiveHoverButton
                     type="submit"
-                    className="rounded-full border-accent bg-accent px-7 py-3.5 font-mono text-[0.7rem] uppercase tracking-[0.18em] text-accent-ink [&>div]:text-accent-ink"
+                    className="rounded-full border-accent bg-accent px-7 py-3.5 font-mono text-[0.75rem] uppercase tracking-[0.12em] text-accent-ink"
                   >
                     Compose my message
                   </InteractiveHoverButton>

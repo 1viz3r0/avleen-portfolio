@@ -108,13 +108,13 @@ export function Hero() {
             <Reveal delay={200} className="mt-10 flex flex-wrap items-center gap-4">
               <InteractiveHoverButton
                 onClick={() => navigate('/projects')}
-                className="border-line-strong rounded-sm px-7 py-3 font-mono text-[0.7rem] uppercase tracking-[0.18em] transition-colors hover:border-accent"
+                className="rounded-full border-line-strong px-7 py-3 font-mono text-[0.75rem] uppercase tracking-[0.12em] transition-colors hover:border-accent"
               >
                 Explore Projects
               </InteractiveHoverButton>
               <InteractiveHoverButton
                 onClick={() => window.open(links.resume.href, '_blank', 'noopener,noreferrer')}
-                className="border-line-strong rounded-sm px-7 py-3 font-mono text-[0.7rem] uppercase tracking-[0.18em] text-muted transition-colors hover:border-accent hover:text-accent"
+                className="rounded-full border-line-strong px-7 py-3 font-mono text-[0.75rem] uppercase tracking-[0.12em] transition-colors hover:border-accent"
               >
                 View Résumé
               </InteractiveHoverButton>
