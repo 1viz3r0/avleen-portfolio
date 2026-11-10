@@ -81,7 +81,7 @@ export function Hero() {
               <span>Cybersecurity Specialist | Security Researcher</span>
             </p>
 
-            <h1 className="font-display text-[clamp(4rem,15vw,10.5rem)] leading-[0.9] tracking-[-0.02em] text-foreground">
+            <h1 className="font-display text-[clamp(3.25rem,12.5vw,8.5rem)] leading-[0.9] tracking-[-0.02em] text-foreground">
               {heroTitleLines.map((line, i) => (
                 <span key={line} className="block" style={i === 1 ? { marginLeft: '0.35em' } : undefined}>
                   <TextReveal text={line} delay={i * 200} />
@@ -99,7 +99,7 @@ export function Hero() {
           {/* One continuous indent: starts one column in from md upward, and
               only the span widens at lg — the column never jumps. */}
           <div className="md:col-span-6 md:col-start-2 lg:col-span-7">
-            <Reveal delay={120} className="flex max-w-xl flex-col gap-4 text-[1rem] leading-relaxed text-muted">
+            <Reveal delay={120} className="flex max-w-xl flex-col gap-4 text-[clamp(1.05rem,0.98rem+0.35vw,1.1rem)] leading-relaxed text-foreground/85">
               {hero.paragraphs.map((p) => (
                 <p key={p.slice(0, 24)}>{p}</p>
               ))}
