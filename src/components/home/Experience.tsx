@@ -35,7 +35,7 @@ export function Experience() {
               <h3 className="font-display text-2xl leading-tight text-foreground sm:text-3xl">
                 {role.role}
               </h3>
-              <p className="mt-3 text-sm text-muted">
+              <p className="mt-3 text-[0.95rem] text-muted">
                 {role.company}
                 <span aria-hidden="true" className="mx-2 text-line-strong">·</span>
                 {role.location}
@@ -56,7 +56,7 @@ export function Experience() {
         ))}
 
         <Reveal className="border-t border-line pt-6">
-          <p className="text-sm text-faint">
+          <p className="text-[0.95rem] text-faint">
             Full role details and dates are in the résumé,{' '}
             <a href={links.resume.href} target="_blank" rel="noreferrer" className="ink-link">
               open it in a new tab

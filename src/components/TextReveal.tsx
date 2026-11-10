@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import type { CSSProperties } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
 
 import { cn } from '@/lib/utils'
 
@@ -9,11 +9,14 @@ import { cn } from '@/lib/utils'
  * light stagger the first time the text enters the viewport.
  *
  * Implementation notes:
+ *  - Characters are grouped into word spans (inline-block, nowrap) so line
+ *    breaks only ever happen BETWEEN words — never mid-word — while the
+ *    per-char animation is unchanged.
  *  - CSS-only motion (opacity/transform on inline-block spans): no layout
  *    shift, no library, one IntersectionObserver per instance, disconnected
  *    after firing.
  *  - The accessible name is preserved: the container carries aria-label,
- *    the decorative char spans are aria-hidden.
+ *    the decorative word/char spans are aria-hidden.
  *  - Under prefers-reduced-motion the text renders statically (no observer,
  *    no transition — see the matching guard in index.css).
  */
@@ -50,6 +53,27 @@ export function TextReveal({
     return () => io.disconnect()
   }, [])
 
+  const nodes: ReactNode[] = []
+  let charIndex = 0
+  text.split(/(\s+)/).forEach((part, wi) => {
+    if (/^\s+$/.test(part)) {
+      nodes.push(' ')
+      return
+    }
+    nodes.push(
+      <span key={wi} aria-hidden="true" className="word">
+        {[...part].map((char) => {
+          const i = charIndex++
+          return (
+            <span key={i} className="char" style={{ '--char-i': i } as CSSProperties}>
+              {char}
+            </span>
+          )
+        })}
+      </span>,
+    )
+  })
+
   return (
     <span
       ref={ref}
@@ -57,16 +81,7 @@ export function TextReveal({
       className={cn('text-reveal', shown && 'is-in', className)}
       style={{ '--reveal-delay': `${delay}ms` } as CSSProperties}
     >
-      {[...text].map((char, i) => (
-        <span
-          key={`${char}-${i}`}
-          aria-hidden="true"
-          className="char"
-          style={{ '--char-i': i } as CSSProperties}
-        >
-          {char === ' ' ? '\u00A0' : char}
-        </span>
-      ))}
+      {nodes}
     </span>
   )
 }

@@ -17,7 +17,7 @@ export function Snapshot() {
           >
             <span className="font-mono text-[0.65rem] tracking-[0.2em] text-faint">{item.index}</span>
             <span className="eyebrow text-foreground">{item.label}</span>
-            <p className="text-sm leading-relaxed text-muted">{item.body}</p>
+            <p className="text-[0.95rem] leading-relaxed text-muted">{item.body}</p>
           </Reveal>
         ))}
       </div>

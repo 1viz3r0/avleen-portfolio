@@ -131,7 +131,7 @@ export function Contact() {
               </div>
             ) : (
               <form onSubmit={onSubmit} noValidate aria-label="Contact form" className="flex flex-col gap-6">
-                <p className="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-faint">
+                <p className="font-mono text-[0.75rem] uppercase tracking-[0.18em] text-faint">
                   Form validates in place · sending happens in your email client
                 </p>
 

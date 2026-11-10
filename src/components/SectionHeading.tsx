@@ -30,7 +30,7 @@ export function SectionHeading({
           {eyebrow}
         </span>
       </div>
-      <h2 className="max-w-3xl font-display text-[2.75rem] leading-[1.05] tracking-[-0.01em] text-foreground sm:text-[3.5rem]">
+      <h2 className="max-w-3xl text-balance font-display text-[2.25rem] leading-[1.08] tracking-[-0.01em] text-foreground sm:text-[2.75rem]">
         <TextReveal text={title} />
       </h2>
       {lede ? <p className="max-w-2xl text-base leading-relaxed text-muted">{lede}</p> : null}
