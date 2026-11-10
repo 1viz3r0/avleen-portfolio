@@ -75,7 +75,7 @@ export function FeaturedProjects() {
                 </span>
               </header>
 
-              <p className="mt-6 max-w-xl text-[0.95rem] leading-relaxed text-muted">
+              <p className="mt-6 max-w-xl text-[1rem] leading-relaxed text-muted">
                 {project.short}
               </p>
 

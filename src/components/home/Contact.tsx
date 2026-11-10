@@ -3,6 +3,7 @@ import { AlertCircle, ArrowUpRight, CheckCircle2, Mail, MapPin } from 'lucide-re
 
 import { Reveal } from '@/components/Reveal'
 import { SectionHeading } from '@/components/SectionHeading'
+import { InteractiveHoverButton } from '@/components/ui/interactive-hover-button'
 import { identity } from '@/data/content'
 
 /**
@@ -109,7 +110,7 @@ export function Contact() {
                   <CheckCircle2 className="mt-1 size-5 shrink-0 text-accent" aria-hidden="true" />
                   Your message is composed — nothing has been sent yet.
                 </p>
-                <p className="mt-4 max-w-lg text-[0.95rem] leading-relaxed text-muted">
+                <p className="mt-4 max-w-lg text-[1rem] leading-relaxed text-muted">
                   No backend or email service is connected to this site, so the form does not — and
                   cannot — send anything by itself. Use the button below to open the exact same
                   message pre-filled in your own email client, or write to the email address at
@@ -174,13 +175,12 @@ export function Contact() {
                 />
 
                 <div className="flex flex-wrap items-center gap-6">
-                  <button
+                  <InteractiveHoverButton
                     type="submit"
-                    className="inline-flex items-center gap-2 rounded-full border border-accent bg-accent px-7 py-3.5 font-mono text-[0.7rem] uppercase tracking-[0.18em] text-accent-ink transition-transform hover:scale-[1.02] focus-visible:scale-[1.02]"
+                    className="rounded-full border-accent bg-accent px-7 py-3.5 font-mono text-[0.7rem] uppercase tracking-[0.18em] text-accent-ink [&>div]:text-accent-ink"
                   >
                     Compose my message
-                    <ArrowUpRight className="size-3.5" aria-hidden="true" />
-                  </button>
+                  </InteractiveHoverButton>
                   <a href={`mailto:${identity.email}`} className="ink-link text-sm">
                     Or email directly: {identity.email}
                   </a>

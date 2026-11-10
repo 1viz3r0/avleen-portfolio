@@ -46,7 +46,7 @@ export function Experience() {
             {/* Responsibilities */}
             <ul className="flex flex-col gap-3 md:col-span-5">
               {role.points.map((point) => (
-                <li key={point} className="flex gap-3 text-[0.95rem] leading-relaxed text-muted">
+                <li key={point} className="flex gap-3 text-[1rem] leading-relaxed text-muted">
                   <span className="mt-2.5 h-px w-4 shrink-0 bg-accent" aria-hidden="true" />
                   {point}
                 </li>

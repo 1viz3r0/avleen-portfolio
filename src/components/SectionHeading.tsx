@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 
 import { cn } from '@/lib/utils'
 import { Reveal } from '@/components/Reveal'
+import { TextReveal } from '@/components/TextReveal'
 
 /**
  * Editorial section header: hairline rule, mono eyebrow with vermilion index,
@@ -30,7 +31,7 @@ export function SectionHeading({
         </span>
       </div>
       <h2 className="max-w-3xl font-display text-[2.75rem] leading-[1.05] tracking-[-0.01em] text-foreground sm:text-[3.5rem]">
-        {title}
+        <TextReveal text={title} />
       </h2>
       {lede ? <p className="max-w-2xl text-base leading-relaxed text-muted">{lede}</p> : null}
     </Reveal>

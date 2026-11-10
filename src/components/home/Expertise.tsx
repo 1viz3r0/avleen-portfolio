@@ -28,7 +28,7 @@ export function Expertise() {
               <span className="mr-2 text-faint">{String(i + 1).padStart(2, '0')}</span>
               {group.group}
             </span>
-            <p className="text-[0.95rem] leading-[1.9] text-muted">
+            <p className="text-[1rem] leading-[1.9] text-muted">
               {group.items.map((item, j) => (
                 <span key={item}>
                   <span className="inline-block whitespace-nowrap transition-colors group-hover:text-foreground">{item}</span>

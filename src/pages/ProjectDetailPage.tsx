@@ -146,7 +146,7 @@ function DetailRow({
       <span className="eyebrow text-faint md:col-span-3">{index}</span>
       <div className="flex flex-col gap-4 md:col-span-9">
         <h2 className="font-display text-2xl leading-snug text-foreground md:text-3xl">{title}</h2>
-        <div className="max-w-2xl text-[0.95rem] leading-relaxed text-muted">{children}</div>
+        <div className="max-w-2xl text-[1rem] leading-relaxed text-muted">{children}</div>
       </div>
     </Reveal>
   )

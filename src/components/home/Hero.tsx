@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import InkRidges from '@/components/ui/ink-ridges'
 import { InteractiveHoverButton } from '@/components/ui/interactive-hover-button'
 import { Reveal } from '@/components/Reveal'
+import { TextReveal } from '@/components/TextReveal'
 import { hero, identity, links } from '@/data/content'
 
 /*
@@ -83,7 +84,7 @@ export function Hero() {
             <h1 className="font-display text-[clamp(4rem,15vw,10.5rem)] leading-[0.9] tracking-[-0.02em] text-foreground">
               {heroTitleLines.map((line, i) => (
                 <span key={line} className="block" style={i === 1 ? { marginLeft: '0.35em' } : undefined}>
-                  {line}
+                  <TextReveal text={line} delay={i * 200} />
                 </span>
               ))}
             </h1>
@@ -98,7 +99,7 @@ export function Hero() {
           {/* One continuous indent: starts one column in from md upward, and
               only the span widens at lg — the column never jumps. */}
           <div className="md:col-span-6 md:col-start-2 lg:col-span-7">
-            <Reveal delay={120} className="flex max-w-xl flex-col gap-4 text-[0.95rem] leading-relaxed text-muted">
+            <Reveal delay={120} className="flex max-w-xl flex-col gap-4 text-[1rem] leading-relaxed text-muted">
               {hero.paragraphs.map((p) => (
                 <p key={p.slice(0, 24)}>{p}</p>
               ))}

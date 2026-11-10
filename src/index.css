@@ -109,6 +109,31 @@ body::after {
   transform: none;
 }
 
+/* Per-character text reveal (21st.dev "Text Effect" style — see TextReveal.tsx) */
+.text-reveal .char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.42em);
+  transition:
+    opacity 0.5s var(--ease-out-expo),
+    transform 0.5s var(--ease-out-expo);
+  transition-delay: calc(var(--reveal-delay, 0ms) + var(--char-i, 0) * 24ms);
+  will-change: opacity, transform;
+}
+
+.text-reveal.is-in .char {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .text-reveal .char {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 /* Page transitions */
 @keyframes page-in {
   from {

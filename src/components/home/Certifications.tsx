@@ -15,7 +15,7 @@ export function Certifications() {
       <ul className="mt-10 flex flex-col">
         {certifications.map((c, i) => (
           <Reveal key={c.title} delay={i * 50} as="li" className="flex items-baseline justify-between gap-6 border-b border-line py-4 first:border-t first:border-line">
-            <span className="text-[0.95rem] text-foreground">{c.title}</span>
+            <span className="text-[1rem] text-foreground">{c.title}</span>
             <span className="shrink-0 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-faint">
               {[c.issuer, c.year].filter(Boolean).join(' · ')}
             </span>

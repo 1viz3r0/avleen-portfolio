@@ -11,7 +11,7 @@ export function NotFoundContent({ message }: { message?: string }) {
       <h1 className="font-display text-6xl leading-none tracking-tight text-foreground sm:text-8xl">
         Wrong room.
       </h1>
-      <p className="max-w-md text-[0.95rem] leading-relaxed text-muted">
+      <p className="max-w-md text-[1rem] leading-relaxed text-muted">
         {message ?? 'This page does not exist. Follow the corridor back to known territory.'}
       </p>
       <Link

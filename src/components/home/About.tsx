@@ -24,7 +24,7 @@ export function About() {
           {about.blocks.map((block, i) => (
             <Reveal key={block.heading} delay={i * 60} className="border-b border-line py-7 first:pt-0 last:border-b-0">
               <h3 className="font-display text-xl text-foreground">{block.heading}</h3>
-              <p className="mt-3 text-[0.95rem] leading-relaxed text-muted">{block.body}</p>
+              <p className="mt-3 text-[1rem] leading-relaxed text-muted">{block.body}</p>
             </Reveal>
           ))}
         </div>
@@ -35,7 +35,7 @@ export function About() {
             <span className="eyebrow text-accent">{about.currentlyExploring.label}</span>
             <ul className="mt-4 flex flex-col gap-3">
               {about.currentlyExploring.items.map((item) => (
-                <li key={item} className="flex gap-3 text-[0.95rem] leading-relaxed text-muted">
+                <li key={item} className="flex gap-3 text-[1rem] leading-relaxed text-muted">
                   <span className="mt-2 h-px w-5 shrink-0 bg-accent" aria-hidden="true" />
                   <span>{item}</span>
                 </li>
@@ -45,7 +45,7 @@ export function About() {
 
           <Reveal delay={140} className="border-t border-line pt-8">
             <span className="eyebrow text-foreground">{about.beyond.label}</span>
-            <p className="mt-4 text-[0.95rem] leading-relaxed text-muted">{about.beyond.body}</p>
+            <p className="mt-4 text-[1rem] leading-relaxed text-muted">{about.beyond.body}</p>
           </Reveal>
 
           <Reveal delay={200} className="border-t border-line pt-8">
@@ -53,7 +53,7 @@ export function About() {
             <ul className="mt-4 flex flex-col gap-5">
               {education.map((e) => (
                 <li key={e.degree} className="flex flex-col gap-1">
-                  <span className="text-[0.95rem] text-foreground">{e.degree}</span>
+                  <span className="text-[1rem] text-foreground">{e.degree}</span>
                   <span className="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-faint">
                     {e.institution} · {e.period}
                   </span>
